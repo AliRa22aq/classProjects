@@ -1,0 +1,22 @@
+{
+  "name": "class_project_calculator",
+  "version": "2.0.1",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "calculator": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^9.1.4"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.3"
+  }
+}
