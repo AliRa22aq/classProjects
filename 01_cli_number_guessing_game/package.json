@@ -1,0 +1,24 @@
+{
+  "name": "class-number-guessing-game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "guess": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "g": "^2.0.1",
+    "inquirer": "^9.1.4",
+    "loading-cli": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.3"
+  }
+}

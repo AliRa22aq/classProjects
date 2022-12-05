@@ -1,0 +1,25 @@
+{
+  "name": "class-atm-machine",
+  "version": "2.3.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "atm-machine": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.1.2",
+    "g": "^2.0.1",
+    "inquirer": "^9.1.4",
+    "loading-cli": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.3"
+  }
+}
