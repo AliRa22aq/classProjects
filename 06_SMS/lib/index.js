@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import { coursesList, instructorsList } from "./types.js";
 import { SMS } from "./SMS.js";
 import inquirer from "inquirer";

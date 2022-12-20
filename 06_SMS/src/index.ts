@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 import { Student } from "./Student.js";
 import { coursesList, instructorsList } from "./types.js";
 import { SMS } from "./SMS.js";
