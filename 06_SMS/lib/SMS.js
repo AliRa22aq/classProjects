@@ -1,7 +1,7 @@
 import { Course } from "./Course.js";
 import { Instructor } from "./Instructor.js";
 import { Student } from "./Student.js";
-export class SMS {
+class SMS {
     _idsGenetor = 0;
     name;
     students = new Map();
@@ -153,3 +153,4 @@ export class SMS {
         this.students.set(studentId, student);
     }
 }
+export default new SMS("PIAIC STUDENT MANAGEMENT SYSTEM");

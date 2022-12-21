@@ -4,7 +4,7 @@ import { Student } from "./Student.js";
 import { CourseInput, InstructorInput } from "./types.js";
 
 
-export class SMS {
+class SMS {
 
   private _idsGenetor = 0;
   name: string;
@@ -191,3 +191,5 @@ export class SMS {
   }
 
 }
+
+export default new SMS("PIAIC STUDENT MANAGEMENT SYSTEM");

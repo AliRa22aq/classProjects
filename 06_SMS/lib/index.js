@@ -1,22 +1,32 @@
 #! /usr/bin/env node
 import { coursesList, instructorsList } from "./types.js";
-import { SMS } from "./SMS.js";
+import PIAIC_SMS from "./SMS.js";
 import inquirer from "inquirer";
 let studentData;
 let quit = false;
-const MyUMS = new SMS("PIAIC STUDENT MANAGEMENT SYSTEM");
-MyUMS.AddCoursesinUMS(coursesList);
-MyUMS.AddInstructorsInUMS(instructorsList);
-// const dummyStudent = MyUMS.enrollStudentinUMS("Ali", 33102, "Morning");
-// MyUMS.logIn(dummyStudent.id, dummyStudent.password);
-// MyUMS.setPassword(dummyStudent.id, "1234", dummyStudent.password);
-// const student = MyUMS.getStudentById(dummyStudent.id);
+PIAIC_SMS.AddCoursesinUMS(coursesList);
+PIAIC_SMS.AddInstructorsInUMS(instructorsList);
+// const dummyStudent = PIAIC_SMS.enrollStudentinUMS("Ali", 33102, "Morning");
+// PIAIC_SMS.logIn(dummyStudent.id, dummyStudent.password);
+// PIAIC_SMS.setPassword(dummyStudent.id, "1234", dummyStudent.password);
+// const student = PIAIC_SMS.getStudentById(dummyStudent.id);
 // studentData = student
 const delay = async (ms = 2000) => {
     return new Promise((res) => setTimeout(res, ms));
 };
+const updatingComponent = async (msg) => {
+    for (let i = 1; i < 100; i++) {
+        const show = "=".repeat(i);
+        console.clear();
+        console.log();
+        console.log(msg);
+        console.log(show);
+        console.log();
+        await delay(10);
+    }
+};
 const welcomeMsg = () => {
-    console.log("Welcome to", MyUMS.name + "\n");
+    console.log("Welcome to", PIAIC_SMS.name + "\n");
 };
 const handleLoggedOutUser = async () => {
     welcomeMsg();
@@ -59,9 +69,12 @@ const handleSingUp = async () => {
             choices: ["Morning", "Evening"]
         }
     ]);
-    const newStudent = MyUMS.enrollStudentinUMS(ans.name, ans.CNIC, ans.secion);
+    const newStudent = PIAIC_SMS.enrollStudentinUMS(ans.name, ans.CNIC, ans.secion);
+    console.clear();
+    console.log("");
     console.log("Student Id: ", newStudent.id);
     console.log("Password: ", newStudent.password + "\n");
+    console.log("");
 };
 const handleLogin = async () => {
     const ans = await inquirer.prompt([
@@ -77,15 +90,15 @@ const handleLogin = async () => {
             masked: true
         }
     ]);
-    // console.log(ans.id, ans.password);
-    const res = MyUMS.logIn(ans.id, ans.password);
+    const res = PIAIC_SMS.logIn(ans.id, ans.password);
     if (res.status) {
-        let student = MyUMS.getStudentById(ans.id);
+        let student = PIAIC_SMS.getStudentById(ans.id);
         studentData = student;
-        // console.log("You are successfully logged In");
     }
     else {
+        console.log("");
         console.log(res.msg);
+        console.log("");
     }
 };
 const handleQuit = () => {
@@ -94,9 +107,7 @@ const handleQuit = () => {
 };
 const handleLogOut = () => {
     console.clear();
-    if (studentData) {
-        studentData.loginStatus = false;
-    }
+    studentData = undefined;
 };
 const loggedInWelcomMsg = () => {
     if (studentData) {
@@ -107,14 +118,14 @@ const loggedInWelcomMsg = () => {
         console.log("Name: ", studentData?.name);
         console.log("Student Id: ", studentData?.studentId);
         console.log("Balance: ", studentData?.balance);
-        console.log("==========================================================");
+        console.log("=".repeat(100));
         console.log("");
     }
 };
 const availabelCoursesList = () => {
     if (studentData) {
         loggedInWelcomMsg();
-        const allCourses = MyUMS.getAllCourseInUMS();
+        const allCourses = PIAIC_SMS.getAllCourseInUMS();
         allCourses.forEach((course) => {
             console.log("Code: ", course.course_code);
             console.log("Name: ", course.course_name);
@@ -127,10 +138,10 @@ const availabelCoursesList = () => {
 const availabelInstructorsList = () => {
     if (studentData) {
         loggedInWelcomMsg();
-        const allInstructors = MyUMS.getAllInstructorsInUMS();
+        const allInstructors = PIAIC_SMS.getAllInstructorsInUMS();
         allInstructors.forEach((instructor) => {
             console.log("Name: ", instructor.name);
-            console.log("Courses Teaching: ", instructor.course_codes.map((code) => MyUMS.getCourseById(code)?.course_name).join(", "));
+            console.log("Courses Teaching: ", instructor.course_codes.map((code) => PIAIC_SMS.getCourseById(code)?.course_name).join(", "));
             console.log("");
         });
     }
@@ -139,7 +150,7 @@ const studentCompleteProfile = () => {
     if (studentData) {
         loggedInWelcomMsg();
         console.log("Student Id: ", studentData.studentId);
-        console.log("Your Courses: ", studentData.courses_enrolled.map((code => MyUMS.getCourseById(code)?.course_name)).join(", "));
+        console.log("Your Courses: ", studentData.courses_enrolled.map((code => PIAIC_SMS.getCourseById(code)?.course_name)).join(", "));
         console.log("Balance: ", studentData.balance);
         console.log("Section: ", studentData.student_section);
         console.log("Name: ", studentData.name);
@@ -179,11 +190,9 @@ const editProfile = async () => {
     ]);
     const { name, age, address, cnic } = ans;
     if (studentData) {
-        MyUMS.setProfile(studentData.studentId, name, age, address, cnic);
+        PIAIC_SMS.setProfile(studentData.studentId, name, age, address, cnic);
     }
-    console.log("Updating Profile");
-    console.log("================================");
-    await delay();
+    await updatingComponent("Updating Profile");
     loggedInWelcomMsg();
 };
 const enrollInACourse = async () => {
@@ -197,13 +206,13 @@ const enrollInACourse = async () => {
         }
         else {
             studentData.courses_enrolled.map((course) => {
-                console.log(MyUMS.getCourseById(course)?.course_name);
+                console.log(PIAIC_SMS.getCourseById(course)?.course_name);
             });
         }
-        console.log("===============================");
+        console.log("=".repeat(100));
         console.log("");
         console.log("(See detail in courses section) Available Courses:");
-        let allCourses = MyUMS.getAllCourseInUMS();
+        let allCourses = PIAIC_SMS.getAllCourseInUMS();
         let allAvailabeCourses = [];
         allCourses.map((course) => {
             if (studentData && !studentData.courses_enrolled.includes(course.course_code)) {
@@ -237,10 +246,8 @@ const enrollInACourse = async () => {
                     message: `Your balance is ${studentData.balance} and this will cost you ${totalfee}`
                 }]);
             if (ans.course) {
-                MyUMS.enrollInCourses(studentData.studentId, allSelectedCorseCodes);
-                console.log("Enrolling in following courses ", allSelectedCorseCodes);
-                console.log("================================");
-                await delay();
+                PIAIC_SMS.enrollInCourses(studentData.studentId, allSelectedCorseCodes);
+                await updatingComponent(`Enrolling in following courses: ${allSelectedCorseCodes}`);
                 loggedInWelcomMsg();
             }
         }
@@ -267,17 +274,17 @@ const updatePassword = async () => {
             message: "Enter Your confirmed new password",
         },
     ]);
-    if (ans.oldPassword === studentData.password) {
+    console.log("ans: ", ans);
+    console.log("studentData.password: ", studentData.password);
+    if (ans.oldPassword !== studentData.password) {
         console.log("Password not matched with old password");
     }
-    else if (ans.newPassword === ans.confimredNewPassword) {
+    else if (ans.newPassword !== ans.confimredNewPassword) {
         console.log("Confirmed password not matched with new password");
     }
     else {
-        MyUMS.setPassword(studentData.studentId, ans.newPassword, studentData.password);
-        console.log("Updating Password");
-        console.log("==============================");
-        await delay();
+        PIAIC_SMS.setPassword(studentData.studentId, ans.newPassword, studentData.password);
+        await updatingComponent(`Updating Password`);
         loggedInWelcomMsg();
     }
 };
