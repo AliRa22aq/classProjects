@@ -6,11 +6,11 @@ let studentData;
 let quit = false;
 PIAIC_SMS.AddCoursesinUMS(coursesList);
 PIAIC_SMS.AddInstructorsInUMS(instructorsList);
-// const dummyStudent = PIAIC_SMS.enrollStudentinUMS("Ali", 33102, "Morning");
-// PIAIC_SMS.logIn(dummyStudent.id, dummyStudent.password);
-// PIAIC_SMS.setPassword(dummyStudent.id, "1234", dummyStudent.password);
-// const student = PIAIC_SMS.getStudentById(dummyStudent.id);
-// studentData = student
+const dummyStudent = PIAIC_SMS.enrollStudentinUMS("Ali", 33102, "Morning");
+PIAIC_SMS.logIn(dummyStudent.id, dummyStudent.password);
+PIAIC_SMS.setPassword(dummyStudent.id, "1234", dummyStudent.password);
+const student = PIAIC_SMS.getStudentById(dummyStudent.id);
+studentData = student;
 const delay = async (ms = 2000) => {
     return new Promise((res) => setTimeout(res, ms));
 };
@@ -111,14 +111,16 @@ const handleLogOut = () => {
 };
 const loggedInWelcomMsg = () => {
     if (studentData) {
-        // if(clear) 
         console.clear();
         console.log("Welcome to PIAIC Student Management System");
         console.log("");
-        console.log("Name: ", studentData?.name);
-        console.log("Student Id: ", studentData?.studentId);
-        console.log("Balance: ", studentData?.balance);
-        console.log("=".repeat(100));
+        console.table([
+            {
+                "Name": studentData?.name,
+                "Student Id": studentData?.studentId,
+                "Balance": studentData?.balance
+            }
+        ]);
         console.log("");
     }
 };
@@ -126,37 +128,30 @@ const availabelCoursesList = () => {
     if (studentData) {
         loggedInWelcomMsg();
         const allCourses = PIAIC_SMS.getAllCourseInUMS();
-        allCourses.forEach((course) => {
-            console.log("Code: ", course.course_code);
-            console.log("Name: ", course.course_name);
-            console.log("Tuition Fee: ", course.tuition_fee);
-            console.log("Instructor: ", course.course_instructor);
-            console.log("");
-        });
+        console.table(allCourses);
+        console.log("");
     }
 };
 const availabelInstructorsList = () => {
     if (studentData) {
         loggedInWelcomMsg();
         const allInstructors = PIAIC_SMS.getAllInstructorsInUMS();
+        const formatedData = [];
         allInstructors.forEach((instructor) => {
-            console.log("Name: ", instructor.name);
-            console.log("Courses Teaching: ", instructor.course_codes.map((code) => PIAIC_SMS.getCourseById(code)?.course_name).join(", "));
-            console.log("");
+            const coursesName = instructor.course_codes.map((code) => PIAIC_SMS.getCourseById(code)?.course_name).join(", ");
+            formatedData.push({
+                "Name": instructor.name,
+                "Courses Teaching": coursesName
+            });
         });
+        console.table(formatedData);
+        console.log("");
     }
 };
 const studentCompleteProfile = () => {
     if (studentData) {
         loggedInWelcomMsg();
-        console.log("Student Id: ", studentData.studentId);
-        console.log("Your Courses: ", studentData.courses_enrolled.map((code => PIAIC_SMS.getCourseById(code)?.course_name)).join(", "));
-        console.log("Balance: ", studentData.balance);
-        console.log("Section: ", studentData.student_section);
-        console.log("Name: ", studentData.name);
-        console.log("Age: ", studentData.age);
-        console.log("Address: ", studentData.address);
-        console.log("CNIC: ", studentData.cnic);
+        console.table([studentData]);
         console.log("");
     }
 };
@@ -198,19 +193,22 @@ const editProfile = async () => {
 const enrollInACourse = async () => {
     if (studentData) {
         loggedInWelcomMsg();
-        console.log("Your Balance: ", studentData.balance);
-        console.log("");
+        // console.log("Your Balance: ", studentData.balance);
         console.log("Already Enrolled In Courses:");
+        // console.table(studentData.courses_enrolled)
         if (studentData.courses_enrolled.length === 0) {
             console.log("None");
+            console.log("");
         }
         else {
-            studentData.courses_enrolled.map((course) => {
-                console.log(PIAIC_SMS.getCourseById(course)?.course_name);
+            const coursesNames = studentData.courses_enrolled.map((course) => {
+                return PIAIC_SMS.getCourseById(course)?.course_name;
             });
+            console.table(coursesNames);
+            console.log("");
         }
-        console.log("=".repeat(100));
-        console.log("");
+        // console.log("=".repeat(100));
+        // console.log("");
         console.log("(See detail in courses section) Available Courses:");
         let allCourses = PIAIC_SMS.getAllCourseInUMS();
         let allAvailabeCourses = [];
